@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "Web Scraper to Google Sheets",
+    "version": "1.0",
+    "description": "Scrapes data from the current page and writes it to Google Sheets.",
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "identity",
+      "identity.email"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "oauth2": {
+      "client_id": "348946539012-43icmp354ck5jp4u81pkt4tb1dnr8i5t.apps.googleusercontent.com",
+      "scopes": [
+        "https://www.googleapis.com/auth/spreadsheets"
+      ]
+    }
+  }
+  
