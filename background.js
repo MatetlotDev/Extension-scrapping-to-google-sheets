@@ -1,6 +1,12 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "saveData") {
-    saveToGoogleSheets(message.data);
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const activeTab = tabs[0];
+      const url = activeTab.url;
+      const dataWithUrl = [...message.data, url];
+
+      saveToGoogleSheets(dataWithUrl);
+    });
   }
 });
 
