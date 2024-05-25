@@ -33,7 +33,7 @@ function saveToGoogleSheets(data) {
         .split("=")[1];
 
       const spreadsheetId = "1ydNM8zMdmF0Dx0uKeNIfMgPUT9dOLCvG-5A4qgS-sbM"; // Remplacez par votre ID réel
-      const range = "Feuille 1!A1";
+      const range = "Acheter!A1";
       const values = [data];
 
       const body = {
