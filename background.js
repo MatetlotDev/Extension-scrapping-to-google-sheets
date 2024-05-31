@@ -1,21 +1,32 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "saveData") {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const activeTab = tabs[0];
-      const url = activeTab.url;
-      const dataWithUrl = [...message.data, url];
+let config = {};
 
-      saveToGoogleSheets(dataWithUrl);
+fetch(chrome.runtime.getURL("config.json"))
+  .then((response) => response.json())
+  .then((json) => {
+    config = json;
+
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === "saveData") {
+        chrome.tabs.query(
+          { active: true, currentWindow: true },
+          function (tabs) {
+            const activeTab = tabs[0];
+            const url = activeTab.url;
+            const dataWithUrl = [...message.data, url];
+
+            saveToGoogleSheets(dataWithUrl);
+          }
+        );
+      }
     });
-  }
-});
+  });
 
 function saveToGoogleSheets(data) {
   chrome.identity.launchWebAuthFlow(
     {
       url:
         "https://accounts.google.com/o/oauth2/auth" +
-        "?client_id=348946539012-43icmp354ck5jp4u81pkt4tb1dnr8i5t.apps.googleusercontent.com" +
+        `?client_id=${config.CLIENT_ID}` +
         "&response_type=token" +
         "&redirect_uri=https://" +
         chrome.runtime.id +
@@ -32,8 +43,10 @@ function saveToGoogleSheets(data) {
         .split("&")[0]
         .split("=")[1];
 
-      const spreadsheetId = "1ydNM8zMdmF0Dx0uKeNIfMgPUT9dOLCvG-5A4qgS-sbM"; // Remplacez par votre ID réel
-      const range = "Acheter!A1";
+      // TODO: vérifier que la maison n'est pas déjà enregistrée
+
+      const spreadsheetId = config.SHEET_ID;
+      const range = `${config.SHEET_NAME}!A1`;
       const values = [data];
 
       const body = {

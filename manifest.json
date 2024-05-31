@@ -4,11 +4,10 @@
     "version": "1.0",
     "description": "Scrapes data from the current page and writes it to Google Sheets.",
     "permissions": [
+      "tabs",
       "activeTab",
       "scripting",
-      "identity",
-      "identity.email",
-      "tabs"
+      "identity"
     ],
     "background": {
       "service_worker": "background.js"
@@ -17,7 +16,7 @@
       "default_popup": "popup.html"
     },
     "oauth2": {
-      "client_id": "348946539012-43icmp354ck5jp4u81pkt4tb1dnr8i5t.apps.googleusercontent.com",
+      "client_id": "CLIENT_ID",
       "scopes": [
         "https://www.googleapis.com/auth/spreadsheets"
       ]
