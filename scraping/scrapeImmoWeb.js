@@ -1,4 +1,4 @@
-function scrapeData() {
+function scrapeImmoWeb() {
   let nbrOfFace = "unknown";
   let cave = "Non";
   let attic = "Non";
@@ -20,7 +20,7 @@ function scrapeData() {
         break;
       }
 
-      case "Surface du grenier": { 
+      case "Surface du grenier": {
         attic = th.parentElement.children[1]?.innerText ? "Oui" : "Non";
         break;
       }
@@ -109,4 +109,4 @@ function scrapeData() {
   chrome.runtime.sendMessage({ action: "saveData", data: data });
 }
 
-scrapeData();
+scrapeImmoWeb();
