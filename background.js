@@ -12,16 +12,17 @@ fetch(chrome.runtime.getURL("config.json"))
           function (tabs) {
             const activeTab = tabs[0];
             const url = activeTab.url;
-            const dataWithUrl = [...message.data, url];
+            const dataWithUrl = [...message.data.row, url];
+            const sheetName = message.data.sheetName;
 
-            saveToGoogleSheets(dataWithUrl);
+            saveToGoogleSheets(dataWithUrl, sheetName);
           }
         );
       }
     });
   });
 
-function saveToGoogleSheets(data) {
+function saveToGoogleSheets(data, sheetName) {
   chrome.identity.launchWebAuthFlow(
     {
       url:
@@ -46,7 +47,7 @@ function saveToGoogleSheets(data) {
       // TODO: vérifier que la maison n'est pas déjà enregistrée
 
       const spreadsheetId = config.SHEET_ID;
-      const range = `${config.SHEET_NAME}!A1`;
+      const range = `${sheetName}!A1`;
       const values = [data];
 
       const body = {

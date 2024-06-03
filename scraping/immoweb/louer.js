@@ -1,12 +1,17 @@
-function scrapeImmoWeb() {
+function scrape() {
+  let typeOfBuilding = "unknown";
   let nbrOfFace = "unknown";
+  let nbrOfBedrooms = "unknown";
   let cave = "Non";
   let attic = "Non";
   let garden = "Non";
   let parking = "Non";
   let energyScore = "unknown";
+  let rent = "unknown";
+  let rentPerMeter = "unknown";
   let netArea = "unknown";
-  let cadastralIncome = "unknown";
+  let extraRent = "unknown";
+  let today = new Date().toLocaleDateString();
 
   document.querySelectorAll("th.classified-table__header")?.forEach((th) => {
     switch (th.innerText) {
@@ -48,12 +53,15 @@ function scrapeImmoWeb() {
         break;
       }
 
-      case "Revenu cadastral": {
-        cadastralIncome = th.parentElement.children[1]?.children[0]?.innerText;
-        cadastralIncome = cadastralIncome
-          ?.trim()
-          .slice(0, cadastralIncome.length - 1);
+      case "Loyer mensuel demandé": {
+        rent =
+          th.parentElement.children[1].children[1]?.innerText?.split(" ")[0];
         break;
+      }
+
+      case "Charges mensuelles": {
+        extraRent =
+          th.parentElement.children[1].children[0]?.innerText?.split(" ")[0];
       }
 
       default: {
@@ -62,30 +70,17 @@ function scrapeImmoWeb() {
     }
   });
 
-  // Type de bien
-  let typeOfBuilding =
-    document.querySelector("h1.classified__title")?.innerText || "unknown";
-  typeOfBuilding = typeOfBuilding.split(" ")[0];
+  typeOfBuilding = document
+    .querySelector("h1.classified__title")
+    ?.innerText?.split(" ")[0];
 
-  // Nombre de chambres
-  let nbrOfBedrooms = "unknown";
   document.querySelectorAll(".overview__text")?.forEach((span) => {
     if (span.innerText.includes("chambre")) {
       nbrOfBedrooms = span.innerText.slice(0, 1);
     }
   });
 
-  // Prix affiché
-  let price =
-    document.querySelector(".classified__price")?.querySelector(".sr-only")
-      ?.innerText || "unknown";
-  price = price.slice(0, price.length - 1);
-
-  // Prix au mètre carré
-  let pricePerMeter = "unknown";
-  if (price !== "unknown" && netArea !== "unknown") {
-    pricePerMeter = (Number(price) / Number(netArea)).toFixed(2).toString();
-  }
+  rentPerMeter = (Number(rent) / Number(netArea)).toFixed(2) || "unknown";
 
   const data = [
     typeOfBuilding,
@@ -96,17 +91,22 @@ function scrapeImmoWeb() {
     attic,
     garden,
     parking,
-    "", // renovation state
     energyScore,
-    cadastralIncome,
-    price,
-    pricePerMeter,
+    rent,
+    rentPerMeter,
     netArea,
+    extraRent,
+    today,
     "", // comment
   ];
 
   // Envoi des données au background script
-  chrome.runtime.sendMessage({ action: "saveData", data: data });
+  chrome.runtime.sendMessage({
+    action: "saveData",
+    data: { row: data, sheetName: "Louer" },
+  });
 }
 
-scrapeImmoWeb();
+console.log("louer");
+
+scrape();

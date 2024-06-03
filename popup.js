@@ -1,35 +1,18 @@
+console.log('popup.js');
 document.getElementById("scrape").addEventListener("click", () => {
   const selectedSite = document.querySelector(
     'input[name="site"]:checked'
   ).value;
+  const selectedSheet = document.querySelector(
+    'input[name="sheet"]:checked'
+  ).value;
 
-  let selectedScript;
-
-  switch (selectedSite) {
-    case "immoweb": {
-      selectedScript = "scrapeImmoWeb.js";
-      break;
-    }
-
-    case "immovlan": {
-      selectedScript = "scrapeImmoVlan.js";
-      break;
-    }
-
-    case "zimmo": {
-      selectedScript = "scrapeZimmo.js";
-      break;
-    }
-
-    default: {
-      selectedScript = "no selected site";
-    }
-  }
+  console.log('selectedFile', `scraping/${selectedSite}/${selectedSheet}`);
 
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript({
       target: { tabId: tabs[0].id },
-      files: [`scraping/${selectedScript}`],
+      files: [`scraping/${selectedSite}/${selectedSheet}.js`],
     });
   });
 });
