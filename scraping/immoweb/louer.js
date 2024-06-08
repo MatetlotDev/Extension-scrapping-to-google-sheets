@@ -92,7 +92,7 @@ function scrape() {
     garden,
     parking,
     energyScore,
-    rent,
+    (Number(rent) / Number(nbrOfBedrooms)).toFixed(0),
     rentPerMeter,
     netArea,
     extraRent,
