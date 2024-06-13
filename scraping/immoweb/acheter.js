@@ -105,6 +105,7 @@ function scrape() {
     netArea,
     today,
     "", // comment
+    "", // pdf
   ];
 
   // Envoi des données au background script
